@@ -1,234 +1,221 @@
-# LitComponent Framework Documentation
+# Framework Documentation
 
 ## Description
 
-LitComponent is a lightweight, performance-focused web component framework built on top of the Lit library. It provides a simplified approach to creating reusable, reactive UI elements with a clean, declarative syntax. The framework emphasizes type safety through TypeScript integration, consistent component lifecycle management, and an intuitive development experience.
+This counter is a lightweight, modern UI component framework built on top of Lit Elements. The framework includes a robust base component system, theming capabilities, and ready-to-use UI elements like the interactive counter component.
 
 Key features:
-- **Web Component Standard**: Built on the native Web Components specifications
-- **Reactive Properties**: Automatically updates the UI when component properties change
-- **TypeScript Support**: Full type safety with decorator-based API
-- **Lightweight**: Minimal runtime overhead compared to larger frameworks
-- **Shadow DOM**: Components are encapsulated to prevent style and DOM collisions
-- **Lifecycle Management**: Consistent component lifecycle hooks with built-in logging
-- **Theme Support**: Easy theming capabilities with CSS variables
+- **Lightweight**: Minimal dependencies and optimized performance
+- **Customizable**: Extensive theming and styling options
+- **Type-safe**: Built with TypeScript for robust development
 
 ## Installation
 
 ### Prerequisites
-- Node.js 14+ and npm 6+
-- TypeScript 4.5+
+- Node.js (v14 or higher)
+- npm or yarn
 
-### Setup New Project
+### Basic Installation
 
-1. **Create a new project directory**:
 ```bash
-mkdir my-lit-project
-cd my-lit-project
-```
+# Create a new directory for your project
+mkdir counter-app
+cd counter-app
 
-2. **Initialize npm project**:
-```bash
+# Initialize a new npm project
 npm init -y
+
+# Install dependencies
+npm install lit lit-element lit-html typescript
+
+# Install LitCounter framework
+npm install litcounter-framework
 ```
 
-3. **Install required dependencies**:
-```bash
-npm install lit typescript
-npm install --save-dev vite @types/node
-```
+### Project Structure
 
-4. **Project structure**:
+After installation, set up your project with the following recommended structure:
 
-Create a basic folder structure:
 ```
-my-lit-project/
+counter-app/
+├── node_modules/
 ├── src/
-│   ├── framework/
-│   │   └── BaseComponent.ts
 │   ├── components/
-│   │   └── MyCounter.ts
+│   │   └── MyCustomCounter.ts    # Your custom components
+│   ├── framework/
+│   │   └── BaseComponent.ts      # Base component from the framework
+│   ├── styles/
+│   │   └── themes.ts             # Theme definitions
+│   ├── index.html
 │   └── main.ts
-├── index.html
 ├── package.json
-├── tsconfig.json
-└── vite.config.js
+└── tsconfig.json
 ```
 
-Then run:
-```bash
-npm run dev
+### TypeScript Configuration
+
+Create a `tsconfig.json` file with the following configuration:
+
+```json
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "lib": ["es2020", "DOM", "DOM.Iterable"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
+}
 ```
 
 ## Usage
 
+### Basic Usage
 
-### Using the Counter Component
-
-The framework includes a pre-built counter component with rich features:
+1. **Import the components in your main entry point:**
 
 ```typescript
+// main.ts
 import './components/MyCounter';
 
-// Use the counter component in your HTML
 document.body.innerHTML = `
-  <my-counter 
-    initial="5" 
-    min="0" 
-    max="100" 
-    step="5"
-    theme="blue">
-  </my-counter>
+  <h1>LitCounter Example</h1>
+  <my-counter initial="5"></my-counter>
 `;
 ```
 
-### Component Parameters
+2. **Create an HTML file to load your application:**
 
-The `MyCounter` component accepts the following parameters:
+```html
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LitCounter Example</title>
+  <script type="module" src="./dist/main.js"></script>
+</head>
+<body>
+  <!-- Content will be added by main.ts -->
+</body>
+</html>
+```
 
-| Parameter | Type   | Default             | Description                                        |
-|-----------|--------|---------------------|----------------------------------------------------|
-| `initial` | Number | `0`                 | Starting value of the counter                      |
-| `min`     | Number | `MIN_SAFE_INTEGER`  | Minimum allowed value (can be negative)            |
-| `max`     | Number | `MAX_SAFE_INTEGER`  | Maximum allowed value                              |
-| `step`    | Number | `1`                 | Increment/decrement step size                      |
-| `theme`   | String | `'blue'`            | Color theme (`'blue'`, `'green'`, or `'purple'`)   |
+### Advanced Usage
 
-### Lifecycle Hooks
+Create multiple counter instances with different configurations:
 
-The framework provides these lifecycle hooks:
-
-- `connectedCallback`: Called when the component is added to the DOM
-- `disconnectedCallback`: Called when the component is removed from the DOM
-- `willUpdate`: Called before the component updates
-
-Example usage:
 ```typescript
-connectedCallback(): void {
-  super.connectedCallback();
-  // Your initialization code here
-}
+// main.ts
+import './components/MyCounter';
+import { css } from 'lit';
 
-willUpdate(changedProperties) {
-  super.willUpdate(changedProperties);
-  // Called before update
+// Add global styles
+const globalStyles = css`
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f5f7fa;
+  }
+`;
+
+// Create and append styles
+const styleElement = document.createElement('style');
+styleElement.textContent = globalStyles.toString();
+document.head.appendChild(styleElement);
+
+// Create page content
+document.body.innerHTML = `
+  <h1>Counter Examples</h1>
+  
+  <div style="display: flex; gap: 20px;">
+    <my-counter initial="5" min="0" max="10" theme="blue"></my-counter>
+    <my-counter initial="50" min="0" max="100" step="5" theme="green"></my-counter>
+    <my-counter initial="0" min="-10" max="10" step="2" theme="purple"></my-counter>
+  </div>
+`;
+```
+
+## Components
+
+### BaseComponent
+
+The `BaseComponent` is the foundation of all components in the LitCounter framework. It extends Lit's `LitElement` and provides common functionality for lifecycle management and logging.
+
+#### Usage
+
+```typescript
+import { BaseComponent } from '../framework/BaseComponent';
+
+export class MyCustomComponent extends BaseComponent {
+  // Your component implementation
 }
 ```
 
-### Theme System
+### MyCounter Component
 
-The component uses CSS variables for theming:
+The `MyCounter` component is an interactive, themeable counter with various customization options.
+
+#### Parameters
+
+| Property | Type   | Default               | Description                           |
+|----------|--------|------------------------|---------------------------------------|
+| initial  | Number | 0                      | Initial counter value                 |
+| min      | Number | Number.MIN_SAFE_INTEGER | Minimum allowed value                 |
+| max      | Number | Number.MAX_SAFE_INTEGER | Maximum allowed value                 |
+| step     | Number | 1                      | Increment/decrement step size         |
+| theme    | String | 'blue'                 | Color theme ('blue', 'green', 'purple') |
+
+#### Example
+
+```html
+<my-counter 
+  initial="10"
+  min="0"
+  max="100"
+  step="5"
+  theme="purple">
+</my-counter>
+```
+
+## Theming
+
+The framework supports three built-in themes:
+- `blue`: Professional, calm appearance
+- `green`: Fresh, positive appearance
+- `purple`: Creative, bold appearance
+
+You can also create custom themes by extending the CSS variables in your component:
 
 ```typescript
 static styles = css`
-  .theme-blue {
-    --primary-color: #3498db;
-    --primary-hover: #2980b9;
-    --value-color: #2c3e50;
+  .theme-custom {
+    --primary-color: #ff5722;
+    --primary-hover: #e64a19;
+    --value-color: #5d4037;
   }
 `;
 ```
 
-You can define multiple themes and switch between them by changing the `theme` property.
-
-## Advanced Usage
-
-### State Management
-
-Use `@state()` for internal component state:
-
-```typescript
-import { state } from 'lit/decorators.js';
-
-@state() private count: number = 0;
-```
-
-State properties trigger renders when changed but aren't exposed as attributes.
-
-### Event Handling
-
-```typescript
-private handleClick() {
-  this.count++;
-  this.dispatchEvent(new CustomEvent('count-changed', { 
-    detail: { count: this.count },
-    bubbles: true 
-  }));
-}
-
-render() {
-  return html`<button @click=${this.handleClick}>Click Me</button>`;
-}
-```
-
-### Using Slots for Composition
-
-```typescript
-render() {
-  return html`
-    <div class="card">
-      <div class="header">
-        <slot name="header">Default Header</slot>
-      </div>
-      <div class="content">
-        <slot>Default content</slot>
-      </div>
-    </div>
-  `;
-}
-```
-
-Usage:
-```html
-<my-card>
-  <span slot="header">Custom Header</span>
-  <p>This is the main content</p>
-</my-card>
-```
-
-## About the Code
-
-The framework is built on these core principles:
-
-### Component-Based Architecture
-
-Each UI element is a self-contained component with its own markup, styles, and behavior, promoting reusability and maintainability.
-
-### Reactivity
-
-The framework uses Lit's reactive properties system to automatically update the UI when data changes, eliminating the need for manual DOM manipulation.
-
-### Type Safety
-
-TypeScript integration ensures type safety during development, catching potential errors early.
-
-### Performance
-
-- Components only re-render when their properties change
-- Shadow DOM encapsulation prevents style conflicts
-- Efficient template rendering with lit-html
-
-### Web Standards
-
-Built entirely on web standards:
-- Custom Elements v1
-- Shadow DOM v1
-- HTML Templates
-- ES Modules
-
-### Decorator Pattern
-
-Uses TypeScript decorators to create a clean, declarative API:
-- `@customElement()`: Registers the component
-- `@property()`: Defines reactive properties
-- `@state()`: Manages internal state
-
-## Best Practices
-
-1. **Keep components focused**: Each component should do one thing well
-2. **Separate concerns**: Divide logic, presentation, and styles
-3. **Use TypeScript**: Leverage strong typing for safer code
-4. **Don't manipulate the DOM directly**: Use Lit's template system
-5. **Avoid deeply nested components**: Prefer flat component hierarchies
-6. **Test your components**: Write unit tests for business logic
-7. **Document your components**: Include JSDoc comments for API clarity
+## Technologies Used
+ - TypeScript
+ - HTML & CSS
+ - Node.js
